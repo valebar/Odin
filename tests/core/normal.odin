@@ -13,6 +13,7 @@ download_assets :: proc "contextless" () {
 @(require) import "c/libc"
 @(require) import "container"
 @(require) import "crypto/x509"
+@(require) import "debug/trace"
 @(require) import "diff"
 @(require) import "encoding/asn1"
 @(require) import "encoding/base32"

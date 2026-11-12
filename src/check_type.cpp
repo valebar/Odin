@@ -4151,7 +4151,9 @@ gb_internal bool check_procedure_type(CheckerContext *ctx, Type *type, Ast *proc
 	case ProcCC_StdCall:
 	case ProcCC_FastCall:
 	case ProcCC_VectorCall:
-		if (arch != TargetArch_i386 && arch != TargetArch_amd64) {
+		// NOTE: Like MSVC, allow "stdcall" and "fastcall" on non-x86 Windows targets (e.g. arm64), where they are the
+		// C calling convention. "vectorcall" stays x86 only, as the backend only implements it there.
+		if (!is_arch_x86() && (cc == ProcCC_VectorCall || build_context.metrics.os != TargetOs_windows)) {
 			error(proc_type_node, "Invalid procedure calling convention \"%s\" for target architecture, expected either i386 or amd64, got %.*s",
 			      proc_calling_convention_strings[cc], LIT(target_arch_names[arch]));
 		}
