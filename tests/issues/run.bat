@@ -205,26 +205,26 @@ fc /b pr_7848.cbor pr_7848_again.cbor > nul || exit /b
 
 %ODIN% test "..\test_issue_equal_proc_dependencies" %COMMON% -build-mode:obj 2>&1 | find /i /c "missing procedure" | findstr /x "0" || exit /b
 
-@rem `asm` templates are amd64-only, assuming this is going to work on Windows (ARM?)
-%ODIN% doc "..\test_issue_asm_doc_category" 2>&1 | find /c "asm templates" | findstr /x "1" || exit /b
-%ODIN% check "..\test_issue_asm_deferred_errors" %COMMON% 2>&1 | find /c "Unknown mnemonic" | findstr /x "5" || exit /b
-%ODIN% check "..\test_issue_asm_target_features" %COMMON% 2>&1 | find /c "Error:" | findstr /x "3" || exit /b
-%ODIN% check "..\test_issue_asm_target_features" %COMMON% 2>&1 | find /c "enables target feature 'avx'" | findstr /x "3" || exit /b
-%ODIN% test "..\test_issue_asm_pinned_clobbers" %COMMON% -o:speed || exit /b
-%ODIN% test "..\test_issue_asm_named_register_clobbers" %COMMON% -o:speed || exit /b
-%ODIN% test "..\test_issue_asm_call_clobbers" %COMMON% -o:speed || exit /b
-%ODIN% test "..\test_issue_asm_written_inputs" %COMMON% -o:speed || exit /b
-%ODIN% check "..\test_issue_asm_clobber_pinned_output" %COMMON% 2>&1 | find /c "which '#clobber' also names" | findstr /x "3" || exit /b
-%ODIN% check "..\test_issue_asm_call_flow" %COMMON% 2>&1 | find /c "Error:" | findstr /x "1" || exit /b
-%ODIN% check "..\test_issue_asm_call_flow" %COMMON% 2>&1 | find /c "can fall through the end" | findstr /x "1" || exit /b
-%ODIN% check "..\test_issue_asm_call_flow" %COMMON% 2>&1 | find /c "Warning:" | findstr /x "0" || exit /b
-%ODIN% check "..\test_issue_asm_align_stack" %COMMON% 2>&1 | find /c "Error:" | findstr /x "4" || exit /b
-%ODIN% check "..\test_issue_asm_align_stack" %COMMON% 2>&1 | find /c "must declare #align_stack" | findstr /x "4" || exit /b
-%ODIN% check "..\test_issue_asm_align_stack" %COMMON% 2>&1 | find /c "#align_stack is redundant" | findstr /x "1" || exit /b
-%ODIN% check "..\test_issue_asm_call_targets" %COMMON% 2>&1 | find /c "Error:" | findstr /x "8" || exit /b
-%ODIN% check "..\test_issue_asm_call_targets" %COMMON% 2>&1 | find /c "uses the Odin calling convention" | findstr /x "3" || exit /b
-%ODIN% check "..\test_issue_asm_call_targets" %COMMON% 2>&1 | find /c "as the target of a call" | findstr /x "2" || exit /b
-%ODIN% check "..\test_issue_asm_call_targets" %COMMON% 2>&1 | find /c "Assertion Failure" | findstr /x "0" || exit /b
+@rem These tests use amd64 `asm` templates, so they target windows_amd64 on any host (Windows on ARM runs the test through emulation)
+%ODIN% doc "..\test_issue_asm_doc_category" -target:windows_amd64 2>&1 | find /c "asm templates" | findstr /x "1" || exit /b
+%ODIN% check "..\test_issue_asm_deferred_errors" -target:windows_amd64 %COMMON% 2>&1 | find /c "Unknown mnemonic" | findstr /x "5" || exit /b
+%ODIN% check "..\test_issue_asm_target_features" -target:windows_amd64 %COMMON% 2>&1 | find /c "Error:" | findstr /x "3" || exit /b
+%ODIN% check "..\test_issue_asm_target_features" -target:windows_amd64 %COMMON% 2>&1 | find /c "enables target feature 'avx'" | findstr /x "3" || exit /b
+%ODIN% test "..\test_issue_asm_pinned_clobbers" -target:windows_amd64 %COMMON% -o:speed || exit /b
+%ODIN% test "..\test_issue_asm_named_register_clobbers" -target:windows_amd64 %COMMON% -o:speed || exit /b
+%ODIN% test "..\test_issue_asm_call_clobbers" -target:windows_amd64 %COMMON% -o:speed || exit /b
+%ODIN% test "..\test_issue_asm_written_inputs" -target:windows_amd64 %COMMON% -o:speed || exit /b
+%ODIN% check "..\test_issue_asm_clobber_pinned_output" -target:windows_amd64 %COMMON% 2>&1 | find /c "which '#clobber' also names" | findstr /x "3" || exit /b
+%ODIN% check "..\test_issue_asm_call_flow" -target:windows_amd64 %COMMON% 2>&1 | find /c "Error:" | findstr /x "1" || exit /b
+%ODIN% check "..\test_issue_asm_call_flow" -target:windows_amd64 %COMMON% 2>&1 | find /c "can fall through the end" | findstr /x "1" || exit /b
+%ODIN% check "..\test_issue_asm_call_flow" -target:windows_amd64 %COMMON% 2>&1 | find /c "Warning:" | findstr /x "0" || exit /b
+%ODIN% check "..\test_issue_asm_align_stack" -target:windows_amd64 %COMMON% 2>&1 | find /c "Error:" | findstr /x "4" || exit /b
+%ODIN% check "..\test_issue_asm_align_stack" -target:windows_amd64 %COMMON% 2>&1 | find /c "must declare #align_stack" | findstr /x "4" || exit /b
+%ODIN% check "..\test_issue_asm_align_stack" -target:windows_amd64 %COMMON% 2>&1 | find /c "#align_stack is redundant" | findstr /x "1" || exit /b
+%ODIN% check "..\test_issue_asm_call_targets" -target:windows_amd64 %COMMON% 2>&1 | find /c "Error:" | findstr /x "8" || exit /b
+%ODIN% check "..\test_issue_asm_call_targets" -target:windows_amd64 %COMMON% 2>&1 | find /c "uses the Odin calling convention" | findstr /x "3" || exit /b
+%ODIN% check "..\test_issue_asm_call_targets" -target:windows_amd64 %COMMON% 2>&1 | find /c "as the target of a call" | findstr /x "2" || exit /b
+%ODIN% check "..\test_issue_asm_call_targets" -target:windows_amd64 %COMMON% 2>&1 | find /c "Assertion Failure" | findstr /x "0" || exit /b
 %ODIN% check "..\test_issue_asm_writeback_errors" -target:linux_arm64 %COMMON% 2>&1 | find /c "Error:" | findstr /x "4" || exit /b
 %ODIN% check "..\test_issue_asm_writeback_errors" -target:linux_arm64 %COMMON% 2>&1 | find /c "writes back its base register" | findstr /x "1" || exit /b
 %ODIN% check "..\test_issue_asm_writeback_errors" -target:linux_arm64 %COMMON% 2>&1 | find /c "takes only a base register and a constant offset" | findstr /x "1" || exit /b

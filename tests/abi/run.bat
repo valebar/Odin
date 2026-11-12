@@ -8,9 +8,12 @@ REM argument here goes to `odin test`, e.g. `run.bat -o:speed`.
 
 REM The corpus is run once per calling convention. "vectorcall" is checked
 REM against MSVC, which defines it, and which clang disagrees with in places.
+REM "vectorcall" is x86 only, so it is skipped for an arm64 odin.exe (ODIN_ARM64, set by run_tests.bat).
 set ODIN_ARGS=%*
 call :corpus c clang || exit /b
-call :corpus vectorcall cl || exit /b
+if not defined ODIN_ARM64 (
+	call :corpus vectorcall cl || exit /b
+)
 exit /b 0
 
 :corpus
