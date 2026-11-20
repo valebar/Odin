@@ -2388,7 +2388,9 @@ namespace lbAbiArm64 {
 	gb_internal i64 aggregate_align_of(Type *t) {
 		Type *bt    = base_type(t);
 		i64   align = type_align_of(bt);
-		if (build_context.metrics.os == TargetOs_darwin) {
+		// NOTE: AAPCS64 goes by the natural alignment of an aggregate, ignoring an `#align` of its own, but Darwin
+		// and Windows (like MSVC and clang) go by its alignment as declared.
+		if (build_context.metrics.os == TargetOs_darwin || build_context.metrics.os == TargetOs_windows) {
 			return align;
 		}
 
